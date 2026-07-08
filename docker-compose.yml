@@ -1,19 +1,19 @@
 services:
   # PostgreSQL Database
-  postgres:
-    image: postgres:15-alpine
-    container_name: medusa_postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: medusa-store
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - medusa_network
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: medusa_postgres
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_DB: medusa-store
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - medusa_network
 
   # Redis
   redis:
@@ -33,14 +33,13 @@ services:
     container_name: medusa_backend
     restart: unless-stopped
     depends_on:
-      - postgres
       - redis
     ports:
       - "9000:9000"
       - "5173:5173"
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/medusa-store
+      - DATABASE_URL=postgresql://postgres.ecrrnofmzdemqrwndshf:dcukperfumes2922@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres
       - REDIS_URL=redis://redis:6379
     env_file:
       - apps/backend/.env
@@ -75,8 +74,8 @@ services:
     networks:
       - medusa_network
 
-volumes:
-  postgres_data:
+# volumes:
+ # postgres_data:
 
 networks:
   medusa_network:
