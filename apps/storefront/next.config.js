@@ -31,6 +31,12 @@ const nextConfig = {
         protocol: "http",
         hostname: "localhost",
       },
+      // --- SUPABASE CONFIGURATION ADDED HERE ---
+      {
+        protocol: "https",
+        hostname: "ecrrnofmzdemqrwndshf.supabase.co",
+      },
+      // -----------------------------------------
       {
         protocol: "https",
         hostname: "*.s3.*.amazonaws.com",
