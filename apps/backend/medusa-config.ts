@@ -28,6 +28,24 @@ module.exports = defineConfig({
         ],
       },
     },
+    // 1. Stripe Payment Provider Configuration - Edited by Rishabh
+    // This tells Medusa how to handle payments through Stripe.
+    {
+      resolve: "@medusajs/medusa/payment", // Resolves the base payment module
+      options: {
+        providers: [
+          {
+            resolve: "@medusajs/medusa/payment-stripe", // Uses the Stripe integration specifically
+            id: "stripe", // The internal ID used by Medusa for this provider
+            options: {
+              // Connects to your Stripe account using the secret key from your .env
+              apiKey: process.env.STRIPE_API_KEY,
+            },
+          },
+        ],
+      },
+    },
+  // End - Stripe Payment Provider Configuration - Edited by Rishabh
   ],
   admin: {
     vite: (config) => {
