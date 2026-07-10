@@ -4,6 +4,7 @@ import FeaturedProducts from "@modules/home/components/featured-products"
 import Hero from "@modules/home/components/hero"
 import { listCollections } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
+import AutoScrollingBanner from "@modules/home/components/scrolling-banner"
 
 export const metadata: Metadata = {
   title: "Medusa Next.js Starter Template",
@@ -30,6 +31,7 @@ export default async function Home(props: {
 
   return (
     <>
+      <AutoScrollingBanner/>
       <Hero />
       <div className="py-12">
         <ul className="flex flex-col gap-x-6">
