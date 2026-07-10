@@ -1,155 +1,111 @@
-import { listCategories } from "@lib/data/categories";
-import { listCollections } from "@lib/data/collections";
 import { Text, clx } from "@modules/common/components/ui";
-
 import LocalizedClientLink from "@modules/common/components/localized-client-link";
-import MedusaCTA from "@modules/layout/components/medusa-cta";
 
-export default async function Footer() {
-  const { collections } = await listCollections({
-    fields: "*products",
-  });
-  const productCategories = await listCategories();
-
+export default function Footer() {
   return (
-    <footer className="border-t border-ui-border-base w-full">
+    <footer className="border-t border-ui-border-base w-full bg-ui-bg-base">
       <div className="content-container flex flex-col w-full">
-        <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between py-40">
-          <div>
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 py-16 md:py-20 items-start justify-between">
+          
+          {/* Brand & Mission Statement */}
+          <div className="lg:col-span-4 flex flex-col gap-y-4 pr-0 md:pr-10">
             <LocalizedClientLink
-              href="/"
-              className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase"
+              href="#"
+              className="txt-compact-xlarge-plus text-ui-fg-base uppercase hover:text-ui-fg-subtle transition-colors tracking-widest font-bold"
             >
-              DCUK Store
+              DCUK
             </LocalizedClientLink>
+            <p className="txt-small text-ui-fg-subtle leading-relaxed">
+              We are committed to providing quality products and services that meet your needs. Our customer service team works hard to ensure your online shopping experience with DCUK Perfumes is entirely satisfying and enjoyable.
+            </p>
           </div>
-          <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-3">
-            {productCategories && productCategories?.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Categories
-                </span>
-                <ul
-                  className="grid grid-cols-1 gap-2"
-                  data-testid="footer-categories"
-                >
-                  {productCategories?.slice(0, 6).map((c) => {
-                    if (c.parent_category) {
-                      return;
-                    }
 
-                    const children =
-                      c.category_children?.map((child) => ({
-                        name: child.name,
-                        handle: child.handle,
-                        id: child.id,
-                      })) || null;
+          {/* Link Columns */}
+          <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-8 w-full">
+            
+            {/* Quick Links */}
+            <div className="flex flex-col gap-y-4">
+              <span className="txt-small-plus text-ui-fg-base uppercase tracking-wider font-semibold">
+                Quick Links
+              </span>
+              <ul className="flex flex-col gap-y-3 txt-small text-ui-fg-subtle">
+                {["Home", "About", "Contact", "Privacy Policy", "Delivery Policy", "Terms & Conditions"].map((item) => (
+                  <li key={item}>
+                    <LocalizedClientLink href="#" className="hover:text-ui-fg-base transition-colors">
+                      {item}
+                    </LocalizedClientLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-                    return (
-                      <li
-                        className="flex flex-col gap-2 text-ui-fg-subtle txt-small"
-                        key={c.id}
-                      >
-                        <LocalizedClientLink
-                          className={clx(
-                            "hover:text-ui-fg-base",
-                            children && "txt-small-plus"
-                          )}
-                          href={`/categories/${c.handle}`}
-                          data-testid="category-link"
-                        >
-                          {c.name}
-                        </LocalizedClientLink>
-                        {children && (
-                          <ul className="grid grid-cols-1 ml-3 gap-2">
-                            {children &&
-                              children.map((child) => (
-                                <li key={child.id}>
-                                  <LocalizedClientLink
-                                    className="hover:text-ui-fg-base"
-                                    href={`/categories/${child.handle}`}
-                                    data-testid="category-link"
-                                  >
-                                    {child.name}
-                                  </LocalizedClientLink>
-                                </li>
-                              ))}
-                          </ul>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )}
-            {collections && collections.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Collections
-                </span>
-                <ul
-                  className={clx(
-                    "grid grid-cols-1 gap-2 text-ui-fg-subtle txt-small",
-                    {
-                      "grid-cols-2": (collections?.length || 0) > 3,
-                    }
-                  )}
-                >
-                  {collections?.slice(0, 6).map((c) => (
-                    <li key={c.id}>
-                      <LocalizedClientLink
-                        className="hover:text-ui-fg-base"
-                        href={`/collections/${c.handle}`}
-                      >
-                        {c.title}
-                      </LocalizedClientLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <div className="flex flex-col gap-y-2">
-              <span className="txt-small-plus txt-ui-fg-base">Medusa</span>
-              <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
+            {/* Useful Links */}
+            <div className="flex flex-col gap-y-4">
+              <span className="txt-small-plus text-ui-fg-base uppercase tracking-wider font-semibold">
+                Useful Links
+              </span>
+              <ul className="flex flex-col gap-y-3 txt-small text-ui-fg-subtle">
+                {["FAQs", "Cart", "Shop", "My Account", "Track Order"].map((item) => (
+                  <li key={item}>
+                    <LocalizedClientLink href="#" className="hover:text-ui-fg-base transition-colors">
+                      {item}
+                    </LocalizedClientLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Where We Are */}
+            <div className="flex flex-col gap-y-4">
+              <span className="txt-small-plus text-ui-fg-base uppercase tracking-wider font-semibold">
+                Where We Are
+              </span>
+              <ul className="flex flex-col gap-y-3 txt-small text-ui-fg-subtle">
+                {["UAE", "Oman", "Kuwait", "Bahrain", "Saudi Arabia"].map((item) => (
+                  <li key={item}>
+                    <LocalizedClientLink href="#" className="hover:text-ui-fg-base transition-colors">
+                      {item}
+                    </LocalizedClientLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Business Information */}
+            <div className="flex flex-col gap-y-4">
+              <span className="txt-small-plus text-ui-fg-base uppercase tracking-wider font-semibold">
+                Business Information
+              </span>
+              <ul className="flex flex-col gap-y-3 txt-small text-ui-fg-subtle">
                 <li>
-                  <a
-                    href="https://github.com/medusajs"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    GitHub
-                  </a>
+                  <span className="block mb-1">UK VAT Number:</span>
+                  <span className="text-ui-fg-base">GB425783182</span>
                 </li>
                 <li>
-                  <a
-                    href="https://docs.medusajs.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Documentation
-                  </a>
+                  <span className="block mb-1">German VAT Number:</span>
+                  <span className="text-ui-fg-base">DE459632985</span>
                 </li>
                 <li>
-                  <a
-                    href="https://github.com/medusajs/dtc-starter"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Source code
+                  <span className="block mb-1">Company number:</span>
+                  <span className="text-ui-fg-base">13792469</span>
+                </li>
+                <li className="pt-2">
+                  <a href="mailto:info@dcukperfumes.com" className="hover:text-ui-fg-base transition-colors font-medium">
+                    info@dcukperfumes.com
                   </a>
                 </li>
               </ul>
             </div>
+
           </div>
         </div>
-        <div className="flex w-full mb-16 justify-between text-ui-fg-muted">
+
+        {/* Bottom Copyright Bar */}
+        <div className="flex flex-col sm:flex-row w-full pt-8 pb-16 justify-between items-center text-ui-fg-muted border-t border-ui-border-base gap-4 text-center sm:text-left">
           <Text className="txt-compact-small">
-            © {new Date().getFullYear()} DCUK Store. All rights reserved.
+            © {new Date().getFullYear()} Designers Collection Ltd (Company Number 13792469) T/A DCUK Perfumes.
           </Text>
-          <MedusaCTA />
         </div>
       </div>
     </footer>
