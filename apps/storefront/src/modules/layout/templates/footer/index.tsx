@@ -14,7 +14,7 @@ export default function Footer() {
               href="#"
               className="txt-compact-xlarge-plus text-ui-fg-base uppercase hover:text-ui-fg-subtle transition-colors tracking-widest font-bold"
             >
-              DCUK
+              DCUK Perfumes
             </LocalizedClientLink>
             <p className="txt-small text-ui-fg-subtle leading-relaxed">
               We are committed to providing quality products and services that meet your needs. Our customer service team works hard to ensure your online shopping experience with DCUK Perfumes is entirely satisfying and enjoyable.
