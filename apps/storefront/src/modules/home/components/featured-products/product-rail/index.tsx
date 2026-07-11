@@ -86,6 +86,12 @@ export default async function ProductRail({
               Sale
             </button>
           </div>
+          {/* View All Link */}
+          <div className="mt-2">
+            <InteractiveLink href={`/collections/${collection.handle}`}>
+              View all {collection.title}
+            </InteractiveLink>
+          </div>
         </div>
       </div>
 
