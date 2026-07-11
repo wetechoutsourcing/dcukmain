@@ -7,8 +7,6 @@ import { StoreRegion } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
 import SideMenu from "@modules/layout/components/side-menu"
-import SecondaryNav from "@modules/layout/components/secondary-nav"
-import MovingNav from "@modules/layout/components/moving-navigation"
 
 export default async function Nav() {
   const [regions, locales, currentLocale] = await Promise.all([
