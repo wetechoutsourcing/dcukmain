@@ -63,8 +63,6 @@ export default async function Nav() {
           </div>
         </nav>
       </header>
-      <SecondaryNav/>
-      <MovingNav/>
     </div>
   )
 }

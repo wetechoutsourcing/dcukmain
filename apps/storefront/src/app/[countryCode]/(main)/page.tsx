@@ -6,7 +6,8 @@ import Hero from "@modules/home/components/hero"
 import { listCollections } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
 import AutoScrollingBanner from "@modules/home/components/scrolling-banner"
-
+import SecondaryNav from "@modules/layout/components/secondary-nav"
+import MovingNav from "@modules/layout/components/moving-navigation"
 export const metadata: Metadata = {
   title: "Medusa Next.js Starter Template",
   description:
@@ -32,6 +33,8 @@ export default async function Home(props: {
 
   return (
     <>
+      <SecondaryNav/>
+      <MovingNav/>
       <AutoScrollingBanner />
       <Hero />
 
