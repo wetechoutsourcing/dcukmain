@@ -4,7 +4,7 @@ export default function SecondaryNav() {
   return (
     <div className="bg-gray-100 border-b border-gray-200 text-sm">
       <div className="content-container flex items-center justify-between py-2">
-          <Link href="/about" className="hover:text-ui-fg-base text-ui-fg-subtle">
+          <Link href="/categories/exclusive-products" className="hover:text-ui-fg-base text-ui-fg-subtle">
             Exclusive
           </Link>
           <Link href="/contact" className="hover:text-ui-fg-base text-ui-fg-subtle">
