@@ -50,7 +50,7 @@ const Hero = () => {
         {/* Call to Action */}
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <a 
-            href="http://localhost:8000/dk/store"
+            href='/store'
             className="px-10 py-4 bg-zinc-900 text-white hover:bg-zinc-800 transition-colors duration-300 text-sm uppercase tracking-[0.2em] font-bold shadow-lg shadow-zinc-900/20 text-center"
           >
             Shop Collections
