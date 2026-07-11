@@ -5,6 +5,20 @@ import { Text } from "@modules/common/components/ui"
 import InteractiveLink from "@modules/common/components/interactive-link"
 import ProductPreview from "@modules/products/components/product-preview"
 
+// 1. Pre-compile Regex outside the component to save memory
+const COLLECTION_REGEX = /collection/i;
+
+// 2. Use a Dictionary (Hash Map) based on collection handles for O(1) lookup
+const SUBTITLES: Record<string, string> = {
+  "sospiro": "Sophisticated scents, unforgettable impressions",
+  "moudon": "Modest luxury by Moudon Collection",
+  "ritaj": "Refined and Timeless",
+  "trending": "Discover what’s trending now",
+  "gift-sets": "Celebrate every moment with our gift sets", 
+  "gift-set": "Celebrate every moment with our gift sets", // Catch-all for singular
+  "arabic": "Elegant Arabic styles for every occasion",
+};
+
 export default async function ProductRail({
   collection,
   region,
@@ -22,19 +36,21 @@ export default async function ProductRail({
     },
   })
 
-  if (!pricedProducts) {
+  // 3. Prevent rendering empty containers if the array is empty
+  if (!pricedProducts?.length) {
     return null
   }
 
-  // Safely remove the word "collection" from the watermark title
-  const watermarkText = collection.title ? collection.title.replace(/collection/i, '').trim() : ""
+  // 4. Clean, direct variable assignments
+  const watermarkText = collection.title?.replace(COLLECTION_REGEX, '').trim() || "";
+  const subtitle = SUBTITLES[collection.handle] || "Discover our exclusive collection";
 
   return (
     <div className="content-container py-12 small:py-24">
       {/* Header Section */}
       <div className="relative flex flex-col items-center justify-center text-center mb-12">
         
-        {/* Responsive Watermark Background Text (Word 'Collection' Removed) */}
+        {/* Responsive Watermark Background Text */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden w-full">
           <span className="text-[clamp(4rem,14vw,12rem)] leading-none font-black text-gray-200/40 uppercase tracking-wider whitespace-nowrap select-none">
             {watermarkText}
@@ -53,9 +69,9 @@ export default async function ProductRail({
             {collection.title}
           </h2>
           
-          {/* Subtitle Content */}
+          {/* Dynamic Subtitle Content */}
           <p className="text-lg text-gray-600 mb-8 max-w-lg">
-            Sophisticated scents, unforgettable impressions
+            {subtitle}
           </p>
 
           {/* Quick Links / Tabs */}
@@ -75,12 +91,11 @@ export default async function ProductRail({
 
       {/* Product Grid */}
       <ul className="grid grid-cols-2 small:grid-cols-4 gap-x-6 gap-y-24 small:gap-y-36">
-        {pricedProducts &&
-          pricedProducts.map((product) => (
-            <li key={product.id}>
-              <ProductPreview product={product} region={region} isFeatured />
-            </li>
-          ))}
+        {pricedProducts.map((product) => (
+          <li key={product.id}>
+            <ProductPreview product={product} region={region} isFeatured />
+          </li>
+        ))}
       </ul>
 
       {/* Centered View All Button Below Products */}
