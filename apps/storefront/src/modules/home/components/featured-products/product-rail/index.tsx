@@ -46,13 +46,13 @@ export default async function ProductRail({
   const subtitle = SUBTITLES[collection.handle] || "Discover our exclusive collection";
 
   return (
-    <div className="content-container py-12 small:py-24">
+    <div className="content-container py-12 bg-stone-100 mb-0.5 rounded-xl border border-gray-200">
       {/* Header Section */}
       <div className="relative flex flex-col items-center justify-center text-center mb-12">
         
         {/* Responsive Watermark Background Text */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden w-full">
-          <span className="text-[clamp(4rem,14vw,12rem)] leading-none font-black text-gray-200/40 uppercase tracking-wider whitespace-nowrap select-none">
+          <span className="text-[clamp(4rem,14vw,12rem)] leading-none font-black text-white uppercase tracking-wider whitespace-nowrap select-none">
             {watermarkText}
           </span>
         </div>
@@ -108,7 +108,7 @@ export default async function ProductRail({
       <div className="mt-16 flex justify-center">
         <a 
           href={`/collections/${collection.handle}`}
-          className="px-8 py-3 border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors rounded-sm shadow-sm"
+          className="px-8 py-3 border border-blue-500 text-gray-700 text-sm font-medium  transition-colors rounded-sm shadow-sm bg-black text-white rounded-xl hover:bg-white hover:text-black transition-all duration-300"
         >
           View All Products
         </a>
