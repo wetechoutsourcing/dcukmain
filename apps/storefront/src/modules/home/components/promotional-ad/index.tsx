@@ -49,7 +49,7 @@ export default function PromotionalSection() {
   const [activeTab, setActiveTab] = useState<keyof typeof tabContent>('promise');
 
   return (
-    <section className="py-12 px-4 max-w-7xl mx-auto w-full font-sans">
+    <section className="pt-12 pb-0 px-4 max-w-7xl mx-auto w-full font-sans">
 
       {/* Navigation Tabs */}
       <div className="flex flex-wrap justify-center items-center gap-2 mb-6">
