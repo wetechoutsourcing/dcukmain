@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useRef, useEffect } from "react"
+import React, { useRef, useEffect, useState } from "react"
 import Link from "next/link"
 
 const CATEGORIES = [
@@ -18,59 +18,43 @@ const CATEGORIES = [
 ]
 
 export default function SecondaryNav() {
-  // UI States
-  const [isMoreOpen, setIsMoreOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const [visibleCount, setVisibleCount] = useState(CATEGORIES.length)
-
-  // Scroll Reveal States
   const [showNav, setShowNav] = useState(true)
+
+  // Carousel Scroll States
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(false)
+
   const lastScrollY = useRef(0)
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  // 1. Handle Click Outside for Dropdown
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsMoreOpen(false)
-      }
+  // 1. Check if we need scroll arrows (runs on mount and resize)
+  const checkScroll = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
+      setCanScrollLeft(scrollLeft > 0)
+      // Use Math.ceil to prevent 1px rounding errors on scaled displays
+      setCanScrollRight(Math.ceil(scrollLeft + clientWidth) < scrollWidth)
     }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
+  }
 
-  // 2. Handle Screen Resize for Category Slicing
   useEffect(() => {
     setMounted(true)
-    const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setVisibleCount(3) // Mobile: 3 options
-      } else if (window.innerWidth < 1024) {
-        setVisibleCount(5) // Tablet: 5 options
-      } else {
-        setVisibleCount(CATEGORIES.length) // Desktop: All options
-      }
-    }
-
-    handleResize()
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
+    checkScroll() // Initial check
+    window.addEventListener("resize", checkScroll)
+    return () => window.removeEventListener("resize", checkScroll)
   }, [])
 
-  // 3. Handle Smart Scroll (Hide on down, Show on up)
+  // 2. Handle Smart Scroll (Hide on down, Show on up)
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY
 
-      // If scrolling down and past the top 50px, hide the navbar
       if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
         setShowNav(false)
-        setIsMoreOpen(false) // Auto-close dropdown when scrolling down
       } else {
-        // If scrolling up, show the navbar
         setShowNav(true)
       }
-
       lastScrollY.current = currentScrollY
     }
 
@@ -78,72 +62,73 @@ export default function SecondaryNav() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // Prevent hydration mismatch by rendering a placeholder before the client mounts
-  if (!mounted) {
-    return <div className="h-[49px] w-full bg-[#151025] border-b border-white/10 relative z-40" />
+  // 3. Scroll Button Logic
+  const scroll = (direction: "left" | "right") => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 250 // Distance to scroll per click
+      scrollContainerRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      })
+    }
   }
 
-  // Split categories based on current screen size
-  const visibleCategories = CATEGORIES.slice(0, visibleCount)
-  const hiddenCategories = CATEGORIES.slice(visibleCount)
+  // Prevent hydration mismatch
+  if (!mounted) {
+    return <div className="h-[49px] w-full bg-[#504180] border-b border-white/10 relative z-40" />
+  }
 
   return (
     <nav
-      className={`bg-[#151025] border-b border-white/10 text-white z-40 shadow-md transition-transform duration-300 ease-in-out sticky top-0
+      className={`bg-gradient-to-r from-[#0052D4] via-[#4364F7] to-[#6FB1FC] border-b border-white/10 text-white z-40 shadow-md transition-transform duration-300 ease-in-out sticky top-0
       ${showNav ? "translate-y-0" : "-translate-y-full"}`}
     >
-      <div className="content-container max-w-[1600px] mx-auto px-4 md:px-8 flex items-center justify-between py-3">
+      {/* Relative container allows the absolute buttons to position correctly */}
+      <div className="max-w-[1600px] mx-auto px-2 md:px-6 relative flex items-center h-[49px]">
+        
+        {/* Left Arrow Button */}
+        {canScrollLeft && (
+          <button
+            onClick={() => scroll("left")}
+            className="absolute left-0 top-0 bottom-0 z-10 w-12 sm:w-16 flex items-center justify-center bg-gradient-to-r from-[#151025] via-[#151025]/90 to-transparent text-white/60 hover:text-white transition-colors"
+            aria-label="Scroll left"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+        )}
 
-        {/* Dynamic Visible Categories */}
-        <div className="flex items-center justify-between w-full gap-2 sm:gap-4 lg:gap-4">
-          {visibleCategories.map((cat, index) => (
+        {/* Scrollable Container */}
+        {/* Hidden scrollbar classes included at the end of the className string */}
+        <div
+          ref={scrollContainerRef}
+          onScroll={checkScroll}
+          className="flex items-center gap-4 sm:gap-6 lg:gap-8 overflow-x-auto w-full px-4 sm:px-6 scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {CATEGORIES.map((cat, index) => (
             <Link
               key={index}
               href={cat.href}
-              className="text-[11px] sm:text-xs font-bold lg:font-semibold uppercase tracking-wider lg:tracking-[0.15em] text-white/80 lg:text-white/70 hover:text-white lg:hover:underline underline-offset-4 transition-all duration-200 whitespace-nowrap"
+              className="text-[11px] sm:text-xs font-bold lg:font-semibold uppercase tracking-wider lg:tracking-[0.1em] text-white/80 hover:text-white lg:hover:underline underline-offset-4 transition-all duration-200 whitespace-nowrap py-2"
             >
               {cat.name}
             </Link>
           ))}
-
-          {/* "More" Button & Dropdown Container (Only renders if there are hidden items) */}
-          {hiddenCategories.length > 0 && (
-            <div className="relative shrink-0" ref={dropdownRef}>
-              <button
-                onClick={() => setIsMoreOpen(!isMoreOpen)}
-                className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider bg-white/10 hover:bg-white/20 text-white px-3.5 py-1.5 rounded-full transition-all duration-200 border border-white/15 shadow-sm"
-                aria-expanded={isMoreOpen}
-              >
-                <span>More</span>
-                <svg
-                  width="12" height="12" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-                  className={`transition-transform duration-200 ${isMoreOpen ? "rotate-180" : ""}`}
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-
-              {/* Dropdown Menu Box */}
-              {isMoreOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-[#1a142c] border border-white/20 rounded-xl shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                  <div className="max-h-64 overflow-y-auto custom-scrollbar">
-                    {hiddenCategories.map((cat, index) => (
-                      <Link
-                        key={index}
-                        href={cat.href}
-                        onClick={() => setIsMoreOpen(false)}
-                        className="block px-4 py-2.5 text-xs font-medium uppercase tracking-wider text-white/70 hover:text-white hover:bg-white/10 transition-colors border-b border-white/5 last:border-none"
-                      >
-                        {cat.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
         </div>
+
+        {/* Right Arrow Button */}
+        {canScrollRight && (
+          <button
+            onClick={() => scroll("right")}
+            className="absolute right-0 top-0 bottom-0 z-10 w-12 sm:w-16 flex items-center justify-center bg-gradient-to-l from-[#151025] via-[#151025]/90 to-transparent text-white/60 hover:text-white transition-colors"
+            aria-label="Scroll right"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        )}
 
       </div>
     </nav>
